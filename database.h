@@ -4,6 +4,9 @@
 #include <QtSql>
 #include <QString>
 #include <random>
+#include <QSqlTableModel>
+#include <QTableView>
+
 
 class tables
 {
@@ -18,7 +21,12 @@ public:
     void table_completer(int);
     QString rand_name();
     QString make_string(int);
-    //void database_reader(QSqlDatabase db);
+    void add_new_student(QString,QString);
+    void set_math_grade(QString,QString,int);
+    void set_phys_grade(QString,QString,int);
+    void set_lit_grade(QString,QString,int);
+    void set_chem_grade(QString,QString,int);
+    void database_reader();
     ~tables();
 };
 
@@ -71,6 +79,53 @@ void tables :: table_completer(int students_numbers)
         QSqlQuery newquery;
         newquery.exec("INSERT INTO "+table_name+" VALUES('"+t.rand_name()+"','"+t.rand_name()+"',"+e+","+f+","+g+","+h+")");
     }
+}
+
+void tables :: add_new_student(QString fns,QString lns)
+{
+    QSqlQuery newquery;
+    newquery.exec("INSERT INTO "+table_name+" VALUES('"+fns+"','"+lns+")");
+}
+
+void tables :: set_math_grade(QString fn,QString ln,int math_num)
+{
+    QSqlQuery newquery;
+    QString num = make_string(math_num);
+    newquery.exec("UPDATE "+table_name+"SET math='"+num+"' WHERE firstname='"+fn+"' AND lastname='"+ln+"'");
+}
+
+void tables :: set_phys_grade(QString fn,QString ln,int phys_num)
+{
+    QSqlQuery newquery;
+    QString num = make_string(phys_num);
+    newquery.exec("UPDATE "+table_name+"SET physics='"+num+"' WHERE firstname='"+fn+"' AND lastname='"+ln+"'");
+}
+
+void tables :: set_lit_grade(QString fn,QString ln,int lit_num)
+{
+    QSqlQuery newquery;
+    QString num = make_string(lit_num);
+    newquery.exec("UPDATE "+table_name+"SET litrature='"+num+"' WHERE firstname='"+fn+"' AND lastname='"+ln+"'");
+}
+
+void tables :: set_chem_grade(QString fn,QString ln,int chem_num)
+{
+    QSqlQuery newquery;
+    QString num = make_string(chem_num);
+    newquery.exec("UPDATE "+table_name+"SET litrature='"+num+"' WHERE firstname='"+fn+"' AND lastname='"+ln+"'");
+}
+
+void tables :: database_reader()
+{
+    QSqlTableModel *model = new QSqlTableModel;
+    model->setTable("class1");
+    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    model->select();
+    model->setHeaderData(0,Qt::Horizontal,"firstname");
+    model->setHeaderData(1,Qt::Horizontal,"lastname");
+    QTableView *view = new QTableView;
+    view->setModel(model);
+    view->show();
 }
 
 tables :: ~tables()
