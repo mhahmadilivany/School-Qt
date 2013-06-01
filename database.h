@@ -121,8 +121,6 @@ void tables :: database_reader()
     model->setTable("class1");
     model->setEditStrategy(QSqlTableModel::OnManualSubmit);
     model->select();
-    model->setHeaderData(0,Qt::Horizontal,"firstname");
-    model->setHeaderData(1,Qt::Horizontal,"lastname");
     QTableView *view = new QTableView;
     view->setModel(model);
     view->show();
